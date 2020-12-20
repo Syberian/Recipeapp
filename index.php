@@ -26,7 +26,7 @@ if ( window.history.replaceState ) {
 </head>
 <body>
 
-  <!-- rejestracja-->
+  <!--modal rejestracja-->
 <div class="modal fade" id="rejestracja" tabindex="0" aria-labelledby="rejestracjaModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
 	<div class="modal-content">
@@ -65,7 +65,7 @@ if ( window.history.replaceState ) {
 	</div>
 </div>
 </div>
-  <!--logowanie-->
+  <!--modal logowanie-->
 <div class="modal fade" id="logowanie" tabindex="-1" aria-labelledby="logowanieModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
 	<div class="modal-content">
@@ -93,7 +93,7 @@ if ( window.history.replaceState ) {
 	</div>
 </div>
 </div>
-<!-- add recipe -->
+<!--Modal Dodaj recepture-->
 <div class="modal fade" id="addRecipeModal" tabindex="-2" aria-labelledby="dodajReceptureModal" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
 	<div class="modal-content">
@@ -122,7 +122,7 @@ if ( window.history.replaceState ) {
 </div>
 </div>
 
-<!-- modify recipe -->
+<!--Modyfikuj recepture modal-->
 <div class="modal fade" id="modifyRecipeModal" tabindex="-2" aria-labelledby="modifyReceptureModal" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
 	<div class="modal-content">
@@ -156,6 +156,7 @@ if ( window.history.replaceState ) {
 <div class="container-fluid h-100">
     <nav class="navbar navbar-expand-lg bg-darkgreen navbar-light">
         <div class="container-fluid">
+			<!-- Logo icon -->
             <a href="#">
                 <i class="bi bi-journal-check navbar-brand text-white" style="font-size: 2em; line-height: 0;"></i>
             </a>
@@ -169,9 +170,7 @@ if ( window.history.replaceState ) {
                     <li class="nav-item">
                         <a class="nav-link active text-white" aria-current="page" href="#">Przepisy</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Lista zakupów</a>
-                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#rejestracja">Zarejestruj się</a>
                     </li>

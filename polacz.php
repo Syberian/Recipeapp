@@ -35,8 +35,6 @@ function logowanie()
         } 
 		else
 		{
-            echo " <h3>Nieprawidłowa nazwa użytkownika lub hasło</h3><br/>
-                 <a href='index.php'>Kliknij tutaj, aby zalogować się ponownie</a> .";
         }
     }
 	/*else
@@ -66,17 +64,15 @@ function rejestracja()
 		
 		if (isset($result))
 		{
-			echo "<h3>Zostałeś pomyślnie zarejestrowany</h3></br>
-				  <a href='index.php'>Kliknij tutaj, aby się zalogować </a>";
+			echo "<script>alert('Pomyślnie stworzono konto!')</script>";
 		} 
 		elseif($haslo !=$haslo2)
 		{
-			echo "<h4>Hasła muszą być takie same</h4>";
+			echo "<script>alert('Hasła się nie zgadzają')</script>";
 		}
 		else 
 		{
-			echo "<h3>Brak wymaganych pól.</h3></br>
-				  <a href='index.php'>Kliknij tutaj, aby zarejestrować się jeszcze raz</a>";		  
+			echo "<script>alert('Niezidentyfikowany błąd')</script>";
 		}	
     }
 	/*

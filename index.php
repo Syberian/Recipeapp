@@ -57,7 +57,7 @@ if ( window.history.replaceState ) {
 			</div>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+		<button type="button" class="btn btn-secondary" id="registerButton" data-bs-dismiss="modal">Zamknij</button>
 		<input type="submit" class="btn btn-primary bg-purple" value="Zarejestruj" >
 		
 	</div>

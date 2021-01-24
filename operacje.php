@@ -1,15 +1,11 @@
 
 <?php
-$test = "";
 if(isset($_POST['ondelete']))
 {
 	usun($_POST['ondelete']);
 }
 
-if(isset($_POST['onmodify']))
-{
-	
-}
+
 
 function dodaj()
 {
@@ -20,6 +16,11 @@ function dodaj()
 		$tytul = $_POST['tytul'];
 		$opis = $_POST['opis'];
 		$autor = $_SESSION['login'];
+		$image = $_FILES['zdjecie']['name'];
+		//Zapisanie zdjecia do folderu
+		
+		$public = $_POST['publiczny'];
+		
 		
 		$sql = "SELECT id FROM uzytkownicy where nazwaUzytkownika = '$autor'";
 		
@@ -34,8 +35,8 @@ function dodaj()
 			}
 		}
 		
-		$sql = "INSERT INTO przepisy (idUzytkownik,tytul,opis,autor)
-		VALUES ('$userID', '$tytul', '$opis','$autor')";
+		$sql = "INSERT INTO przepisy (idUzytkownik,tytul,opis,zdjecie,publiczny)
+		VALUES ('$userID', '$tytul', '$opis','$image','$public')";
 		$result = $connect->query($sql);
 		
 	
@@ -69,9 +70,9 @@ function modyfikuj()
 		$id = ($_POST['tempId']);
 		$tytul = ($_POST['modifyTytul']);
 		$opis = ($_POST['modifyOpis']);
+		$image = $_POST['zdjecie'];
 		
-		
-		$sql = "UPDATE przepisy SET tytul = '$tytul', opis = '$opis' WHERE id='$id'";
+		$sql = "UPDATE przepisy SET tytul = '$tytul', opis = '$opis', zdjecie = '$image' WHERE id='$id'";
 		$result = $connect->query($sql);
 		
 		/*
@@ -115,66 +116,10 @@ function usun($id)
 function wyswietl()
 {
 	$connect = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-	
-	$nazwa = $_SESSION['login'];
-			$sql = "SELECT id FROM uzytkownicy where nazwaUzytkownika = '$nazwa'";
-				
-				$result = $connect->query($sql);
-				
-				if ($result->num_rows > 0)
-				{
-		  
-					while($row = $result->fetch_assoc())
-					{
-						$userID =  $row['id'];	
-					}
-				}
-				
-			$sql = "SELECT * FROM przepisy where idUzytkownik='$userID'";
-
-			$result = $connect->query($sql);
-
-			if ($result->num_rows > 0) 
-			{
-				while($row = $result->fetch_assoc())
-				{
-					$id = $row['id'];
-					$tytul = $row['tytul'];
-					$opis = $row['opis'];
-					/*
-							<div class="przepis bg-lightgreen">
-
-								<p class="przepisTitle mx-auto my-auto">Testowy przepis</p>
-
-								<textarea readonly rows="10" cols="30" ></textarea>
-
-							</div> 
-					*/
-					echo "
-					<div class='przepis bg-lightgreen'> 
-						<p class='przepisTitle mx-auto-my-auto'>".$tytul."
-
-						</p> 
-						<textarea readonly rows='10' cols='30'>".$opis."</textarea>
-						<div class='centerButtons'>
-							<a href='#' onclick='modifyRecipe(".$id.",`".$tytul."`,`".$opis."`)' data-bs-toggle='modal' data-bs-target='#modifyRecipeModal'><i class='bi bi-pencil'></i></a>
-							<a href='#' onclick='deleteRecipe(".$id.")'><i class='bi bi-file-earmark-x'></i></a>
-						</div>
-						<input type='hidden' name='id' value='.$id.'/>
-						
-					</div>";
-					
-					
-					
-				}
-			}
-}
-
-function wyswietlWszystko()
-{
-	$connect = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-	
-	$sql = "SELECT nazwaUzytkownika FROM uzytkownicy";
+	if(isset($_SESSION['login']))
+	{
+		$nazwa = $_SESSION['login'];
+		$sql = "SELECT id FROM uzytkownicy where nazwaUzytkownika = '$nazwa'";
 			
 			$result = $connect->query($sql);
 			
@@ -183,26 +128,92 @@ function wyswietlWszystko()
 	  
 				while($row = $result->fetch_assoc())
 				{
-					$userName =  $row['nazwaUzytkownika'];	
-					
+					$userID =  $row['id'];	
 				}
 			}
 			
+		$sql = "SELECT * FROM przepisy where idUzytkownik='$userID'";
+
+		$result = $connect->query($sql);
+
+		if ($result->num_rows > 0) 
+		{
+			while($row = $result->fetch_assoc())
+			{
+				$id = $row['id'];
+				$tytul = $row['tytul'];
+				$opis = $row['opis'];
+				$image = $row['zdjecie'];
+				$public = $row['publiczny'];
+	
+				echo "
+				<div class='przepis bg-lightgreen'> 
+					<p class='przepisTitle mx-auto-my-auto'>".$tytul."
+						<div class='centerButtons'>
+							<img class='recipeImage' src='images/".$image."' />
+						</div>
+					</p> 
+					<textarea readonly rows='10' cols='30'>".$opis."</textarea>
+					<div class='centerButtons'>
+						<a href='#' onclick='modifyRecipe(".$id.",`".$tytul."`,`".$opis."`,`".$image."`)' data-bs-toggle='modal' data-bs-target='#modifyRecipeModal'><i class='bi bi-pencil'></i></a>
+						<a href='#' onclick='deleteRecipe(".$id.")'><i class='bi bi-file-earmark-x'></i></a>
+					</div>
+					<input type='hidden' name='id' value='.$id.'/>
+					
+				</div>";
+				
+				
+				
+			}
+		}
+		else
+		{
+			echo "<b>Dodaj nowy przepis klikając w przycisk w prawym dolnym rogu ekranu.</b>";
+		}
+	}
+	
+	
+}
+
+function wyswietlWszystko()
+{
+	$connect = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+	
 			
-			$sql = "SELECT idUzytkownik,tytul,opis,autor FROM przepisy ";
+			
+			$sql = "SELECT uzytkownicy.nazwaUzytkownika,przepisy.tytul,przepisy.opis,przepisy.zdjecie,przepisy.publiczny FROM przepisy,uzytkownicy where uzytkownicy.id = przepisy.idUzytkownik ";
 	
 			$result = $connect->query($sql);
-
+			
 			if ($result->num_rows > 0) 
 			{
 				while($row = $result->fetch_assoc())
 				{
-					echo "<h5>Tytuł:</h5>" . $row["tytul"]. " <h5>Opis:</h5>". $row["opis"]."<h5>Autor:</h5>".$row["autor"]."<br><br>"  ;
+					if($row["publiczny"]=="1")
+					{
+						
+						$tytul = $row['tytul'];
+						$opis = $row['opis'];
+						$image = $row['zdjecie'];
+						$autor = $row['nazwaUzytkownika'];
+					
+						
+						echo "
+						<div class='przepis bg-lightgreen'> 
+							<p class='przepisTitle mx-auto-my-auto'>".$tytul."
+								<div class='centerButtons'>
+									<img class='recipeImage' src='images/".$image."' />
+								</div>
+							</p> 
+							<textarea readonly rows='10' cols='30'>".$opis."</textarea>
+							<center><b>Autor:  ".$autor."</b></center>
+						</div>";
+					}
 				}
 			}
 			else
 			{
-			  echo "Brak przepisów";
+			  echo "";
 			}
 	
 }

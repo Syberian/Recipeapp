@@ -13,6 +13,22 @@ if($connect === false)
     die("ERROR: Błąd przy łączeniu z bazą danych. " . mysqli_connect_error());
 }
 
+
+if(isset($_GET['loggedout']))
+{
+	wyloguj();
+}
+
+function wyloguj()
+{
+	session_unset();
+	session_destroy();
+	$_SESSION = array();
+
+	header("Location: index.php");
+}
+
+
 function logowanie()
 {
 	$connect = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);

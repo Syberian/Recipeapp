@@ -2,14 +2,51 @@ $(document).ready(function(){
 
     if( $('#loggedAs').html().trim().length < 1 )
     {
-        $('#loginBlockade').show();
+        $('#main').show();
+        $('#logoutButton').hide();
+        $('#registerButton').show();
+		$('#addRecipe').hide();
     }
     else
     {
-        $('#recipeContent').show();
+        $('#registerButton').hide();
+        $('#logoutButton').show();
+		
     }
 
+    $('#yourRecipes').click(function(){
+
+        $('#main').hide();
+        $('#recipeContent').show();
+        $('#addRecipe').show();
+
+    });
+
+    $("#allRecipes").click(function(){
+
+        $('#main').show();
+        $('#recipeContent').hide();
+        $('#addRecipe').hide();
+
+    });
+
+    $('#logoutButton').click(function(){
+
+        $.ajax
+        ({
+            url:"index.php",
+            type:"post",
+            data: {"logged": "param"},
+            dataType: 'text',
+            success:function()
+            {
+            }
+
+        });
+
+    });
 });
+
 function deleteRecipe(param)
 {
     $.ajax
@@ -24,7 +61,7 @@ function deleteRecipe(param)
     });
 }
 
-function modifyRecipe(id, title, opis)
+function modifyRecipe(id, title, opis, image)
 {
     $.ajax
     ({
@@ -36,6 +73,7 @@ function modifyRecipe(id, title, opis)
             $('#tempId').val(id);
             $('#titleToModify').val(title);
             $('#recipeToModify').val(opis);
+            $('#modifyRecipeImage').attr("src", "images/"+image);
         }
     });
 }

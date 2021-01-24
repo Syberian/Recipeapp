@@ -1,10 +1,14 @@
 <!--logowanie-->
 <?php
+	session_start();
 	require('polacz.php');
 	require('operacje.php');
-	session_start();
+	
 	logowanie();
 	rejestracja();
+	
+
+
 ?>
 
 <!-- Uniknięcie dodawania tych samych przepisów przy odświeżaniu strony -->
@@ -102,7 +106,7 @@ if ( window.history.replaceState ) {
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	</div>
 	<div class="modal-body">
-		<form action="index.php" method="POST">
+		<form action="index.php" method="POST" enctype="multipart/form-data">
 			<div>
 				<label for="tytul" class="form-label">Nazwa przepisu</label>
 				<input type="text" class="form-control" name="tytul">
@@ -111,13 +115,20 @@ if ( window.history.replaceState ) {
 				<label for="opis" class="form-label">Przepis</label>
 				<textarea type="text" class="form-control" name="opis"></textarea>
 			</div>
+			<div class="form-check">
+				<label for="publiczny" class="form-check-label">Publiczny przepis</label>
+				<input type="hidden" name="publiczny" value="0" />
+				<input type="checkbox" class="form-check-input" name="publiczny" value="1"></checkbox>
+			</div>
+			Dodaj zdjęcie:<br>
+			<input type="File" accept=".jpg" name="zdjecie" />
 	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-		<input type="submit" class="btn btn-primary bg-purple" value="Dodaj przepis">
-		<?php dodaj() ?>
-	</div>
-	</form>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+			<input type="submit" class="btn btn-primary bg-purple" value="Dodaj przepis">
+			<?php dodaj() ?>
+		</div>
+		</form>
 	</div>
 </div>
 </div>
@@ -141,6 +152,11 @@ if ( window.history.replaceState ) {
 				<textarea type="text" id="recipeToModify" class="form-control" name="modifyOpis"></textarea>
 
 				<input type="hidden" id="tempId" name="tempId">
+			</div>
+			<div>
+				<br><img id='modifyRecipeImage' width="100" heigt="100"/><br>
+				Modyfikuj zdjęcie:<br>
+				<input type="File" accept=".jpg" name="zdjecie" />
 			</div>
 	</div>
 	<div class="modal-footer">
@@ -168,41 +184,56 @@ if ( window.history.replaceState ) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto ">
                     <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="#">Przepisy</a>
+                        <a class="nav-link active text-white" aria-current="page" href="#" id="yourRecipes">Twoje przepisy</a>
                     </li>
-
-                    <li class="nav-item">
+					 <li class="nav-item">
+                        <a class="nav-link active text-white" aria-current="pageAll" href="#" id="allRecipes">Wszystkie przepisy</a>
+                    </li>
+                    <li class="nav-item" id="registerButton">
                         <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#rejestracja">Zarejestruj się</a>
                     </li>
+
+					
                 </ul>
 				<span id="loggedAs" style="margin-right: 15px; margin-left: 15px; color: white;">
 					<?php
-					if(isset($_SESSION['login']))
-					{
-						echo "Jesteś zalogowany jako: ".$_SESSION['login'];
-					}
+						if(isset($_SESSION['login']))
+						{
+							echo "Jesteś zalogowany jako: ".$_SESSION['login'];
+						}
 					?>
+					
+				</span>
+				<span id="logout" style="margin-right: 15px; margin-left: 15px; color: white;">
+				
+					<a class="nav-link text-white" href="index.php?loggedout=true" id="logoutButton">Wyloguj</a>
+					
 				</span>
             </div>
         </div>
     </nav>
 	
 
-    <div class="content" style="background-color: #f8f4e8; padding: 20px;">
+    <div class="content" style="padding: 20px;">
 	
-      	<span id="loginBlockade" class="my-auto mx-auto" style="font-weight: bold; display: none;">
-			Zaloguj się by odblokować funkcjonalność.
-	  	</span>
+      	<div id="main" class="my-auto mx-auto" style="display: none;">
+			<b>Witaj na stronie, na której możesz stworzyć i przechowywać swoje przepisy kulinarne oraz przeglądać przepisy innych użytkowników.<br></b>
+			<?php
+			wyswietlWszystko();
+			?>
+		
+	  	</div>
 	  
-	  	<div id="recipeContent" style="display: none;">
+	  	<div id="recipeContent" >
 		  <!-- wyswietl aktualne przepisy z bazy -->
 			<?php
 			wyswietl();
 			?>
+
 	  	</div>
 		
 		<div id="addRecipe">
-			<a href="#" id="addRecipeButton" data-bs-toggle="modal" data-bs-target="#addRecipeModal"><i class="bi bi-plus text-white mx-auto my-auto"></i></a>
+			<a href="#" id="addRecipeButton" data-bs-toggle="modal" data-bs-target="#addRecipeModal"><i class="bi bi-plus text-white"></i></a>
 		</div>
 
     </div>
